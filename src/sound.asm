@@ -1,4 +1,15 @@
 
+
+music_pal    
+    !binary "../res/teleport2a_9000.bin"
+    
+;!align 256, 0
+music_ntsc
+    ;-- !binary "../res/asia7-ntsc.bin"
+    
+END_OF_MUSIC
+
+
 ;-------------------------------
 !zone
 
@@ -28,18 +39,18 @@ fx_channel      !byte $0E   ;-- $00 for channel 1, $07 for channel 2, $0E for ch
     lda #<.addr
     ldy #>.addr
     ldx fx_channel
-    jsr MUSIBASE + 6
+    jsr MUS_BASE + 6
     +RESTORE_XY
 }
 
 !macro PLAY_MUSIC {
-    jsr MUSIBASE + 3
+    jsr MUS_BASE + 3
 }
 
 !macro INIT_MUSIC .subtune {
     lda #$0F
     sta music_volume
-    jsr MUSIBASE + 9
+    jsr MUS_BASE + 9
     
     lda music_enabled
     beq .no_music
@@ -59,7 +70,7 @@ fx_channel      !byte $0E   ;-- $00 for channel 1, $07 for channel 2, $0E for ch
     sta current_music
     tax
     tay
-    jsr MUSIBASE
+    jsr MUS_BASE
     
 .no_change
 }
@@ -76,7 +87,7 @@ fx_channel      !byte $0E   ;-- $00 for channel 1, $07 for channel 2, $0E for ch
     
 .do
     lda music_volume
-    jsr MUSIBASE + 9
+    jsr MUS_BASE + 9
 }
 
 
@@ -131,7 +142,7 @@ prepare_music
     dec .o2 +1
     
 .o1 lda END_OF_MUSIC
-.o2 sta MUSIBASE + (END_OF_MUSIC - music_ntsc)
+.o2 sta MUS_BASE + (END_OF_MUSIC - music_ntsc)
     
     lda .o2 +1
     bne .loop
@@ -140,7 +151,7 @@ prepare_music
     dec .o2 +2
     
     lda .o2 +2
-    cmp #>MUSIBASE -1
+    cmp #>MUS_BASE -1
     bne .loop
     
     lda #<FILTER_OFFSET_NTSC
@@ -197,18 +208,9 @@ T_FILTER_6581
 T_FILTER_8580
     !byte $2F, $29, $1F, $19, $0F, $09
     
-FILTER_OFFSET_PAL   = $04E8 + MUSIBASE
-FILTER_OFFSET_NTSC  = $04EE + MUSIBASE
+FILTER_OFFSET_PAL   = $04E8 + MUS_BASE
+FILTER_OFFSET_NTSC  = $04EE + MUS_BASE
 
 ;-------------------------------
-
-music_pal    
-    ;-- !binary "../res/asia7-pal.bin"
-    
-;!align 256, 0
-music_ntsc
-    ;-- !binary "../res/asia7-ntsc.bin"
-    
-END_OF_MUSIC
 
 

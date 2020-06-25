@@ -66,6 +66,9 @@ main
     
 ;--    +MEMCOPY_HUGE SPRTBASE, SPRTBASE + $4000, SPR_BASE   ;-- not needed anymore (see sprites.asm)
     +MEMCOPY_HUGE CHARBASE, CHARBASE + $0800, CHR_BASE
+    +MEMCOPY_HUGE MUSIBASE, END_OF_MUSIC, MUS_BASE
+    
+    jsr MUS_BASE + 9
     
     jsr prepare_sprites
     

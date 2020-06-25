@@ -27,6 +27,7 @@ SCR_BASE    = $0000 + VICBANK1  ;-- screen ram
 CHR_BASE    = $0800 + VICBANK1  ;-- char ram
 COL_BASE    = $D800             ;-- color ram
 SPR_BASE    = $1000 + VICBANK1  ;-- sprite ram
+MUS_BASE    = $9000             ;-- music
 
 VIC_BASE    = $D000             ;-- graphic chip area
 

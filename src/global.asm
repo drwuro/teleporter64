@@ -31,6 +31,13 @@ playerspeed         !byte 4
 gamestate           !byte 0     ;-- 0 = walk, 1 = play, 2 = next
 
 
+JOY_LIST            = $C000     ;-- the list of joystick input states
+joy_index           !byte $FF
+curve_index         !byte 0
+tele_delay          !byte 0
+TELE_DELAY          = 16
+
+
 STATE_GAME          = 0
 STATE_TITLE         = 1
 
@@ -54,7 +61,8 @@ T_COLORLINES_L
     !for i, 0, 24 { !byte <COL_BASE + i * 40 }
 T_COLORLINES_H
     !for i, 0, 24 { !byte >COL_BASE + i * 40 }
-    
+
+
 LEVEL
     !byte 20        ;-- y of left platform
     !byte 5         ;-- y of right platform

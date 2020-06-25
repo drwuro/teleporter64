@@ -48,6 +48,9 @@ turn_off_basic
 ;--
 irq_handler
     +DEBUG_BORDER WHT
+
+    ;-- first thing we do is play the music routine
+    jsr MUS_BASE + 3
     
     ;-- set irq trigger flag, so the main loop (main.asm) knows that it's
     ;-- allowed to do stuff
