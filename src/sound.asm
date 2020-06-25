@@ -91,6 +91,10 @@ fx_channel      !byte $0E   ;-- $00 for channel 1, $07 for channel 2, $0E for ch
 }
 
 
+!eof
+
+
+
 detect_sid_model
 	;-- SID DETECTION ROUTINE
 	

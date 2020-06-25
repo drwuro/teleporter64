@@ -45,7 +45,7 @@
     !src "global.asm"
     !src "macros.asm"
     !src "tools.asm"
-    !src "joystick.asm"
+    ;-- !src "joystick.asm"
     !src "game.asm"
     !src "irq.asm"
     
@@ -72,7 +72,7 @@ main
     
     jsr prepare_sprites
     
-    jsr init_joysticks
+    ;--jsr init_joysticks
     jsr irq_setup
     jsr turn_on_screen
     

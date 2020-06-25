@@ -126,9 +126,9 @@ update_game
     ;-- handle joystick input
     ldx joy_index
     
-    jsr read_joysticks
-    lda joy_state2          ;-- we're interested in joystick in port 2
-    cmp #$1F                ;-- check for neutral position
+    lda $DC00               ;-- read joystick port 2
+    and #%00011111
+    cmp #%00011111          ;-- check for neutral position
     beq .no_joy
     cmp JOY_LIST, x         ;-- check if state is different than previous one
     beq .no_joy

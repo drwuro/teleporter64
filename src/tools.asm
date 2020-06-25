@@ -116,46 +116,6 @@ turn_off_charset_toggle    ;-- shift + cbm
 ;-------------------------------
 !zone
 
-;-- reset sprite position to 0
-;-- sprite number has to be in a
-
-hide_sprite  
-    sta $20  
-    +SAVE_XY
-    
-    lda $20
-    tax
-
-    lda SPRITE_XF
-    and SPR_NO, x
-    sta SPRITE_XF
-    
-    txa
-    pha
-    
-    asl
-    tax
-    lda #$00
-    sta SPRITE_0X, x
-    
-    pla
-    tax
-    
-    +RESTORE_XY
-    
-    rts
-
-
-turn_off_sprites
-    lda #%00000000
-    sta SPR_ENAB
-    
-    rts
-
-
-;-------------------------------
-!zone
-
 ;-- print string on screen
 ;--
 invertmask  !byte 0

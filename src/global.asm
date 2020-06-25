@@ -30,12 +30,12 @@ playerspeed         !byte 4
 
 gamestate           !byte 0     ;-- 0 = walk, 1 = play, 2 = next
 
+tele_delay          !byte 0     ;-- delay until teleportation really starts
+TELE_DELAY          = 16
 
 JOY_LIST            = $C000     ;-- the list of joystick input states
 joy_index           !byte $FF
 curve_index         !byte 0
-tele_delay          !byte 0
-TELE_DELAY          = 16
 
 
 STATE_GAME          = 0
@@ -67,11 +67,7 @@ LEVEL
     !byte 20        ;-- y of left platform
     !byte 5         ;-- y of right platform
     !byte 12, 19    ;-- start x/y of path
-    
-    ;-- !text "rrrrddllddddddddrrrrrrrruuuuuuurrrrrrrrrrdddd"
-    ;-- !text "rrrruuuurrrrddddllddrrrrrrrruurrulllllldddddddddddddrrrrruu"
-    ;-- !text "lllllllluuuuuulllllllllllldddrrrruuuuuuullllllluuuuuu$"
-    
+
     !text "rrrrrrrruuuuuuuuullllluuuuuurrrrrrrrrrrrr$"
     
 T_PATHCOLOR
