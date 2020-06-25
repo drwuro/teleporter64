@@ -23,6 +23,26 @@ init_game
 
     jsr init_level
     
+    ;-- clear joy list
+    lda #0
+    ldx #0
+.clearloop
+    sta JOY_LIST, x
+    dex
+    bne .clearloop
+    
+    ;-- reset game related variables
+    lda #0
+    sta gamestate
+    sta curve_index
+    sta tele_delay
+    
+    lda #DIR_RIGHT
+    sta playerdir
+    
+    lda #$FF
+    sta joy_index
+    
     ;-- init player sprite
     lda #SP_GUY
     sta SPRITE_0
@@ -32,20 +52,6 @@ init_game
     
     lda #%00000001
     sta SPR_ENAB
-    
-    rts
-    
-    
-reset_game
-    jsr init_game
-    
-    lda #0
-    sta gamestate
-    sta curve_index
-    sta tele_delay
-    
-    lda #$FF
-    sta joy_index
     
     rts
 
@@ -115,6 +121,8 @@ update_game
     
     lda #0
     sta tele_delay
+    
+    +PLAY_SFX
     
 .not_reached
     jmp .gs_end
@@ -277,7 +285,7 @@ update_game
 .upper_border
 .lower_border
 
-    jsr reset_game
+    jsr init_game
     rts
 
 .no_border    

@@ -46,6 +46,7 @@
     !src "macros.asm"
     !src "tools.asm"
     ;-- !src "joystick.asm"
+    !src "sound.asm"
     !src "game.asm"
     !src "irq.asm"
     
@@ -67,8 +68,6 @@ main
 ;--    +MEMCOPY_HUGE SPRTBASE, SPRTBASE + $4000, SPR_BASE   ;-- not needed anymore (see sprites.asm)
     +MEMCOPY_HUGE CHARBASE, CHARBASE + $0800, CHR_BASE
     +MEMCOPY_HUGE MUSIBASE, END_OF_MUSIC, MUS_BASE
-    
-    jsr MUS_BASE + 9
     
     jsr prepare_sprites
     
@@ -118,6 +117,12 @@ CHARBASE
     !src "font.asm"
     !src "tiles.asm"
 MUSIBASE
-    !src "sound.asm"
+
+music_pal    
+    !binary "../res/teleport2a_9000.bin"
     
+sfx_teleport
+    !binary "../res/sfx_teleport.bin"
+    
+END_OF_MUSIC
     

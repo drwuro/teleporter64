@@ -50,10 +50,10 @@ irq_handler
     +DEBUG_BORDER WHT
 
     ;-- first thing we do is play the music routine
-    jsr MUS_BASE + 3
+    +PLAY_MUSIC
     
     ;-- set irq trigger flag, so the main loop (main.asm) knows that it's
-    ;-- allowed to do stuff
+    ;-- allowed to do stuff now
     lda #1
     sta irqTrigger
     
