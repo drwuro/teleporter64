@@ -16,7 +16,7 @@
     ;-- C64 version developed shortly after
     ;-- for Reset64 Craptastic 4K Game Compo 2020
     ;--     -> https://csdb.dk/event/?id=2958
-    
+    ;--
 
     ;-- output file and start address
     !to "out.prg", cbm
@@ -52,7 +52,11 @@
 ;-------------------------------
 !zone
 
+;-- the main function, this is the actual start of the whole program
+;-- (launched indirectly after the basic launcher above)
+;--
 main
+    ;-- first do some initialization
     jsr turn_off_basic
     jsr turn_off_screen
     jsr turn_off_runstop_restore
@@ -70,19 +74,30 @@ main
     jsr turn_on_screen
     
     jsr init_game
-    
-    
+
+    ;-- now everything has been initialized, so
+    ;-- it's time to step into the main loop
+    ;--
+    ;-- the main loop controls the main program flow during the whole
+    ;-- lifetime of the application. it is waiting for a trigger signal
+    ;-- of the irq routine (irq.asm) which gets called once every, frame,
+    ;-- i.e. each time the graphics chip (VIC-II) creates the screen image
+    ;--
 .mainloop
+    ;-- wait until irq routine was called
     lda irqTrigger
     beq .no_irq
     
+    ;-- increment tick counter and call update function (game.asm)
     inc tick
     jsr update
     
+    ;-- clear irq trigger flag
     lda #0
     sta irqTrigger
     
 .no_irq
+    ;-- check for keyboard events
     jsr $FFE4       ;-- GETIN
     beq .nokey
     sta key

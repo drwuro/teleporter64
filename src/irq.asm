@@ -49,10 +49,12 @@ turn_off_basic
 irq_handler
     +DEBUG_BORDER WHT
     
+    ;-- set irq trigger flag, so the main loop (main.asm) knows that it's
+    ;-- allowed to do stuff
     lda #1
     sta irqTrigger
     
-    ;-- clean up
+    ;-- clean up irq
     lda #$01
     sta $D019   ; ACK interrupt to reenable it
 
