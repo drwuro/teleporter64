@@ -1,4 +1,5 @@
 mkdir -p build
+mkdir -p bin
 
 cd src
 acme -o ../bin/out.prg -f cbm -l ../build/labels.txt -r ../build/report.txt main.asm
