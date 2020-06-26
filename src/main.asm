@@ -45,6 +45,7 @@
     !src "sound.asm"
     !src "game.asm"
     !src "irq.asm"
+    !src "levels.asm"
     
 ;-------------------------------
 !zone

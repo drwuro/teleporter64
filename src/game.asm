@@ -15,12 +15,13 @@ update
     
     
 ;-------------------------------
-;-- update game
+;-- game functions
 !zone
 
 
 init_game
 
+    jsr clear_screen
     jsr init_level
     
     ;-- clear joy list
@@ -57,8 +58,21 @@ init_game
     rts
 
 
-.tempx          !word 0
-.currenttile    !byte 0
+
+next_level
+    inc level_number
+    lda level_number
+    cmp #4
+    bne +
+    lda #0
+    sta level_number
++   jsr init_game
+    
+    rts
+
+
+
+.tempx  !word 0
 
 update_game
     +DEBUG_BORDER RED
@@ -240,7 +254,7 @@ update_game
     jmp .no_curve
     
 .on_teleporter
-    ;-- make sure it's the right teleporter
+    ;-- make sure it's the teleporter on the right
     cpx #RIGHT_PLAT_X   ;-- x is still playerx / 8 at this point so we can utilize this
     bne .no_curve
     
@@ -281,16 +295,14 @@ update_game
 .no_curve
 
     ;-- check if player leaves the screen
-    lda playerx
-    sta .tempx
     lda playerx +1
+    clc
     ror
-    ror .tempx
-    lda .tempx
-    cmp #0
-    beq .left_border
-    cmp #320/2 + SPR_XOFF
-    beq .right_border
+    lda playerx
+    ror
+    beq .left_border        ;-- x = 0
+    cmp #320/2
+    beq .right_border       ;-- x = 160
     
     lda playery
     cmp #0
@@ -340,7 +352,8 @@ update_game
     bne .gs_end
     
     ;-- next level
-    jsr init_game
+    jsr next_level
+    rts
     
 .gs_end
 
@@ -379,10 +392,10 @@ update_game
     adc #SPR_YOFF
     sta SPRITE_0Y
 
-    +DEBUG_BORDER BLU
+    +DEBUG_BORDER BLK
     
     rts
-
+    
     
 ;-------------------------------
 ;-- level functions
@@ -398,12 +411,15 @@ update_game
 .curdir !byte 0
 .olddir !byte 0
     
-    
 init_level
+    lda level_number
+    asl
+    tax
+
     ;-- load level address
-    lda #<LEVEL
+    lda T_LEVELS, x
     sta .levaddr
-    lda #>LEVEL
+    lda T_LEVELS +1, x
     sta .levaddr +1
     
     ;-- set player x pos
@@ -677,14 +693,18 @@ draw_path
 .tempaddr   = $29
 
 get_tile_at_playerpos
+    
+    ;-- divide x by 8
+    lda playerx +1  ;-- high bit needs to be taken along
+    clc
+    ror
     lda playerx
-    lsr
+    ror
     lsr
     lsr
     tax             ;-- x is now playerx / 8
     
-    ;-- TODO will not work with x > 255!!!
-    
+    ;-- divide y by 8
     lda playery
     lsr
     lsr

@@ -20,6 +20,8 @@ key                 !byte 0
 
 num_lives           !byte 3
 
+level_number        !byte 0
+
 pathcolor           !byte GR1
 tel_anim            !byte 0
 
@@ -41,9 +43,9 @@ curve_index         !byte 0
 STATE_GAME          = 0
 STATE_TITLE         = 1
 
-LEFT_PLAT_X         = 4
+LEFT_PLAT_X         = 5;4
 RIGHT_PLAT_X        = 30
-PLAT_W              = 6
+PLAT_W              = 5;6
 
 TL_WALL             = 64
 TL_TELE             = 65
@@ -62,13 +64,6 @@ T_COLORLINES_L
 T_COLORLINES_H
     !for i, 0, 24 { !byte >COL_BASE + i * 40 }
 
-
-LEVEL
-    !byte 20        ;-- y of left platform
-    !byte 5         ;-- y of right platform
-    !byte 12, 19    ;-- start x/y of path
-
-    !text "rrrrrrrruuuuuuuuullllluuuuuurrrrrrrrrrrrr$"
     
 T_PATHCOLOR
     !byte GR1, GR2, GR3, WHT, WHT, GR3, GR2, GR1
