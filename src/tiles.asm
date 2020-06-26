@@ -89,6 +89,15 @@
     !byte %#####...
     !byte %........
     
+    !byte %.######.
+    !byte %.#....#.
+    !byte %.#....#.
+    !byte %.######.
+    !byte %...##...
+    !byte %.######.
+    !byte %#....#.#
+    !byte %########
+    
     ;-- the following tiles will be converted into sprites
     ;-- at runtime (see sprites.asm for explanation)
     

@@ -65,7 +65,7 @@ main
     jsr copy_charset
     
     ;-- copy custom chars (start at char #64, number of chars is 17)
-    +MEMCOPY_HUGE CHARBASE, CHARBASE + 17*8, CHR_BASE + 64*8
+    +MEMCOPY_HUGE CHARBASE, CHARBASE + 18*8, CHR_BASE + 64*8
     
     ;-- copy music
     +MEMCOPY_HUGE MUSIBASE, END_OF_MUSIC, MUS_BASE

@@ -25,9 +25,9 @@
 
 prepare_sprites
     ;-- source address
-    lda #<CHR_BASE + 74 * 8
+    lda #<CHR_BASE + 75 * 8     ;-- 75th char is the first "guy" sprite
     sta .srcaddr
-    lda #>CHR_BASE + 74 * 8
+    lda #>CHR_BASE + 75 * 8
     sta .srcaddr +1
 
     ;-- destination address
