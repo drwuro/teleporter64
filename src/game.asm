@@ -422,6 +422,9 @@ init_level
     lda T_LEVELS +1, x
     sta .levaddr +1
     
+    ;-- unpack level path
+    jsr unpack_level
+    
     ;-- set player x pos
     lda #(LEFT_PLAT_X -1) * 8
     sta playerx
@@ -442,6 +445,39 @@ init_level
     sta playery
     
     rts
+    
+    
+    
+.count  = $27
+    
+unpack_level
+    ldy #4                  ;-- offset of path start in level data
+    ldx #0
+    
+.read
+    lda (.levaddr), y        ;-- read number
+    cmp #$FF
+    beq .end_unpack
+    sta .count
+    
+    iny
+    lda (.levaddr), y       ;-- read direction (l, r, u, d)
+    
+.writeloop
+    sta UNPACKED_PATH, x    ;-- write direction number of times
+    inx
+    dec .count
+    bne .writeloop
+    
+    iny
+    jmp .read
+    
+.end_unpack
+    lda #'$'
+    sta UNPACKED_PATH, x    ;-- write end character ($)
+    
+    rts
+    
     
 
 draw_level
@@ -554,7 +590,7 @@ draw_path
     tay
 
     ;-- load path start address (level address + 4)
-    +ADD_16_8C .levaddr, 4, .o1 +1
+    ;-- +ADD_16_8C .levaddr, 4, .o1 +1
     
     ;-- draw path loop
     ldx #$FF
@@ -563,7 +599,7 @@ draw_path
     inx
     lda .curdir
     sta .olddir             ;-- store previous direction
-.o1 lda $FFFF, x
+.o1 lda UNPACKED_PATH, x
     sta .curdir
 
     ;-- determine path direction from current path char
