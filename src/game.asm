@@ -21,6 +21,9 @@ update
 
 init_game
 
+    lda #0
+    sta SPR_ENAB        ;-- turn off sprites
+
     jsr clear_screen
     jsr init_level
     
@@ -52,8 +55,8 @@ init_game
     sta SPRITE_0C
     
     lda #%00000001
-    sta SPR_ENAB
-    sta SPR_PRIO
+    sta SPR_ENAB        ;-- make sprite visible
+    sta SPR_PRIO        ;-- by default sprite shall be hidden behind chars
     
     rts
 
@@ -332,6 +335,9 @@ update_game
     adc #SP_TELE
     sta SPRITE_0
     
+    lda #%00000000
+    sta SPR_PRIO            ;-- during teleportation phase, sprite shall be in front of chars
+    
     jmp .update_sprite_pos
 
     ;--
@@ -365,6 +371,9 @@ update_game
     clc
     adc #SP_GUY
     sta SPRITE_0
+    
+    lda #%00000001
+    sta SPR_PRIO            ;-- during walking phase, sprite shall be behind chars
     
 .update_sprite_pos
     ;-- add sprite border offset to playerx

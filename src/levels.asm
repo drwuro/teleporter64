@@ -10,8 +10,7 @@
 ;-- according to that unpacked string (as this was the format during
 ;-- development)
 
-;-- small python script to pack strings:
-;-- 
+;-- a small python script to pack the strings can be found in etc/
 
 
 LEVEL1
