@@ -23,21 +23,17 @@
     *=  $0801
     
     ;-- basic starter
-    !byte $17, $08, $0a, $00, $8f, $20          ;-- 10 REM
-    !text "*** TELEPORTER ***"
+    !byte $FF, $FF, $0a, $00, $8f, $20          ;-- 10 REM
+    !text "*** TELEPORTER BY ZEHA ***"
     !byte $00
     
-    !byte $3a, $08, $14, $00, $8f, $20          ;-- 20 REM
-    !text "(C) 2020 DR. WURO INDUSTRIES"
-    !byte $00
-    
-    !byte $45, $08, $1e, $00, $9e, $20          ;-- 30 SYS
-    !text "2128"
+    !byte $FF, $FF, $14, $00, $9e, $20          ;-- 20 SYS
+    !text "2096"
     
     !byte $00, $00, $00                         ;-- end of basic program
     
-    ;-- address 2128 decimal, program entry point
-    *= $0850
+    ;-- address 2096 decimal, program entry point
+    *= $0830
     jmp main
     
     ;-- code includes
