@@ -52,11 +52,13 @@ init_game
     
     lda #%00000001
     sta SPR_ENAB
+    sta SPR_PRIO
     
     rts
 
 
-.tempx  !word 0
+.tempx          !word 0
+.currenttile    !byte 0
 
 update_game
     +DEBUG_BORDER RED
@@ -114,6 +116,7 @@ update_game
 +
     ;-- check if player reached teleporter
     jsr get_tile_at_playerpos
+    and #%01111111  ;-- check if we're on a space char, but inverted is ok too
     cmp #' '
     beq .not_reached
     
@@ -205,7 +208,9 @@ update_game
 
 .endmove
 
-    ;-- check if player is located on a curve
+    ;-- check for tile collision
+    
+    ;-- make sure player is exactly on a tile (xy position / 8)
     lda playerx
     and #%00000111
     bne .no_curve
@@ -214,6 +219,8 @@ update_game
     bne .no_curve
     
     jsr get_tile_at_playerpos
+    
+    ;-- check if player is located on a curve
     cmp #70
     beq .curve
     cmp #71
@@ -222,11 +229,25 @@ update_game
     beq .curve
     cmp #73
     beq .curve
+    ;-- check if player is located on a teleporter
+    cmp #TL_TELE
+    beq .on_teleporter
+    cmp #TL_TELE +1
+    beq .on_teleporter
+    cmp #TL_TELE +2
+    beq .on_teleporter
     
     jmp .no_curve
     
+.on_teleporter
+    ;-- make sure it's the right teleporter
+    cpx #RIGHT_PLAT_X   ;-- x is still playerx / 8 at this point so we can utilize this
+    bne .no_curve
+    
+    inc gamestate
+    
 .curve
-    ;-- get next direction in joy list
+    ;-- get next value from joy list and apply to player's moving direction
     inc curve_index
     ldx curve_index
     lda JOY_LIST, x
@@ -260,7 +281,6 @@ update_game
 .no_curve
 
     ;-- check if player leaves the screen
-    
     lda playerx
     sta .tempx
     lda playerx +1
@@ -320,11 +340,11 @@ update_game
     bne .gs_end
     
     ;-- next level
-    inc $D021
+    jsr init_game
     
 .gs_end
 
-    ;-- draw player as guy    
+    ;-- draw player as guy
     lda tick
     lsr
     lsr
@@ -387,7 +407,7 @@ init_level
     sta .levaddr +1
     
     ;-- set player x pos
-    lda #LEFT_PLAT_X * 8
+    lda #(LEFT_PLAT_X -1) * 8
     sta playerx
     lda #0
     sta playerx +1
@@ -464,7 +484,7 @@ draw_platform
     }
 
     ;-- draw teleporter
-    +SUB_16_8C .scraddr, 40
+    +SUB_16_8C .scraddr, 40     ;-- teleporter is 1 char row above walls
     +SUB_16_8C .coladdr, 40
     
     lda tel_anim
@@ -476,17 +496,24 @@ draw_platform
     adc #TL_TELE
 
     cpx #LEFT_PLAT_X        ;-- check whether drawing left or right teleporter
-    bne .not_left
-    
-    ;-- go to right end of platform when drawing left teleporter
-    !for i, 0, PLAT_W -2 {
-        iny
-    }
-    
-.not_left
-    sta (.scraddr), y
+    bne +
+    !for i, 0, PLAT_W -2 { iny }    ;-- move a few chars to the right
++   sta (.scraddr), y
     lda #LBL
-    sta (.coladdr), y    
+    sta (.coladdr), y
+    
+    ;-- draw black square (to make player sprite disappear behind)
+    txa
+    tay
+    dey
+    
+    cpx #LEFT_PLAT_X        ;-- check whether drawing left or right teleporter
+    beq +
+    !for i, 0, PLAT_W { iny }       ;-- move a few chars to the right
++   lda #' ' + 128          ;-- inverted space char
+    sta (.scraddr), y
+    lda #BLK
+    sta (.coladdr), y
     
     rts
     

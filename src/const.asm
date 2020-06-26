@@ -89,6 +89,7 @@ SPR_H       = 21
 
 ;-- sprite stuff
 SPR_ENAB    = VIC_BASE +21
+SPR_PRIO    = VIC_BASE +27
 SPR_ZOOMX   = VIC_BASE +29
 SPR_ZOOMY   = VIC_BASE +23
 

@@ -65,8 +65,13 @@ main
     jsr clear_screen
     jsr init_screen
     
-;--    +MEMCOPY_HUGE SPRTBASE, SPRTBASE + $4000, SPR_BASE   ;-- not needed anymore (see sprites.asm)
-    +MEMCOPY_HUGE CHARBASE, CHARBASE + $0800, CHR_BASE
+    ;-- copy original c64 charset
+    jsr copy_charset
+    
+    ;-- copy custom chars (start at char #64, number of chars is 17)
+    +MEMCOPY_HUGE CHARBASE, CHARBASE + 17*8, CHR_BASE + 64*8
+    
+    ;-- copy music
     +MEMCOPY_HUGE MUSIBASE, END_OF_MUSIC, MUS_BASE
     
     jsr prepare_sprites
@@ -114,7 +119,6 @@ main
 SPRTBASE
     !src "sprites.asm"
 CHARBASE
-    !src "font.asm"
     !src "tiles.asm"
 MUSIBASE
 

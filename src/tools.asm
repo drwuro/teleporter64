@@ -116,6 +116,29 @@ turn_off_charset_toggle    ;-- shift + cbm
 ;-------------------------------
 !zone
 
+copy_charset
+    sei
+
+    ;-- make original charset visible to RAM
+    lda $01
+    and #%11111011
+    sta $01
+
+    ;-- copy original charset to CHR_BASE
+    +MEMCOPY_HUGE $D000, $D800, CHR_BASE
+        
+    ;-- make original charset invisible again
+    lda $01
+    ora #%00000100
+    sta $01
+
+    cli
+    
+    rts
+    
+;-------------------------------
+!zone
+
 ;-- print string on screen
 ;--
 invertmask  !byte 0
