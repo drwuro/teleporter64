@@ -62,7 +62,7 @@ init_game
 next_level
     inc level_number
     lda level_number
-    cmp #4
+    cmp #NUM_LEVELS
     bne +
     lda #0
     sta level_number
