@@ -120,7 +120,7 @@ CHARBASE
 MUSIBASE
 
 music_pal    
-    !binary "../res/teleport3.bin"
+    !binary "../res/teleport4.bin"
     
 sfx_teleport
     !binary "../res/sfx_teleport.bin"
