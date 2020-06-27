@@ -30,7 +30,12 @@ playery             !byte 0
 playerdir           !byte DIR_RIGHT
 playerspeed         !byte 4
 
-gamestate           !byte 0     ;-- 0 = walk, 1 = play, 2 = next
+gamestate           !byte 0     ;-- 0 = walk, 1 = play, 2 = next, 3 = lost, 4 = won
+GS_WALK = 0
+GS_PLAY = 1
+GS_NEXT = 2
+GS_LOST = 3
+GS_WON  = 4
 
 tele_delay          !byte 0     ;-- delay until teleportation really starts
 TELE_DELAY          = 16
@@ -43,12 +48,13 @@ curve_index         !byte 0
 STATE_GAME          = 0
 STATE_TITLE         = 1
 
-LEFT_PLAT_X         = 5;4
+LEFT_PLAT_X         = 5
 RIGHT_PLAT_X        = 30
-PLAT_W              = 5;6
+PLAT_W              = 5
 
 TL_WALL             = 64
 TL_TELE             = 65
+TL_COMP             = 74
 
 SP_GUY              = <SPR_BASE / 64
 SP_TELE             = <SPR_BASE / 64 + 4

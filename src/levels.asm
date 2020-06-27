@@ -80,7 +80,7 @@ LEVEL8
     !byte 21, 'l', 4, 'u', 14, 'r', 2, 'u', 8, 'r', $FF
     
     
-NUM_LEVELS = 8
+NUM_LEVELS = 7
     
 T_LEVELS
     !word LEVEL1

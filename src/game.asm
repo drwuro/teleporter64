@@ -1,4 +1,13 @@
 
+str_lost
+    !scr "you failed"
+    !byte $FF
+
+str_won
+    !scr "congratulations"
+    !byte $FF
+
+
 ;-------------------------------
 !zone
 
@@ -54,10 +63,6 @@ init_game
     lda #GRN
     sta SPRITE_0C
     
-    lda #%00000001
-    sta SPR_ENAB        ;-- make sprite visible
-    sta SPR_PRIO        ;-- by default sprite shall be hidden behind chars
-    
     rts
 
 
@@ -86,7 +91,7 @@ update_game
     lda gamestate
     bne .no_color
     
-    ;-- change pathcolor if gamestate is 0 (= walk)
+    ;-- change pathcolor if gamestate is 0 (GS_WALK)
     lda tick
     lsr
     lsr
@@ -112,12 +117,18 @@ update_game
     lda gamestate
     bne +
     jmp .gs_walk
-+   cmp #1
++   cmp #GS_PLAY
     bne +
     jmp .gs_play
-+   cmp #2
++   cmp #GS_NEXT
     bne +
     jmp .gs_next
++   cmp #GS_LOST
+    bne +
+    jmp .gs_lost
++   cmp #GS_WON
+    bne +
+    jmp .gs_won
 +
     jmp .gs_end
     
@@ -137,7 +148,7 @@ update_game
     cmp #' '
     beq .not_reached
     
-    inc gamestate   ;-- switch to next gamestate
+    inc gamestate           ;-- switch to next gamestate (GS_PLAY)
     
     lda #0
     sta tele_delay
@@ -253,7 +264,7 @@ update_game
     beq .on_teleporter
     cmp #TL_TELE +2
     beq .on_teleporter
-    
+
     jmp .no_curve
     
 .on_teleporter
@@ -261,7 +272,8 @@ update_game
     cpx #RIGHT_PLAT_X   ;-- x is still playerx / 8 at this point so we can utilize this
     bne .no_curve
     
-    inc gamestate
+    inc gamestate       ;-- switch to next gamestate (GS_NEXT)
+    rts
     
 .curve
     ;-- get next value from joy list and apply to player's moving direction
@@ -303,24 +315,23 @@ update_game
     ror
     lda playerx
     ror
-    beq .left_border        ;-- x = 0
-    cmp #320/2
-    beq .right_border       ;-- x = 160
+    beq .dead           ;-- x = 0
+    cmp #160
+    beq .dead
     
     lda playery
     cmp #0
-    beq .upper_border
+    beq .dead
     cmp #200
-    beq .lower_border
+    beq .dead
     
     jmp .no_border
-    
-.left_border
-.right_border
-.upper_border
-.lower_border
 
-    jsr init_game
+.dead
+    ;-- player is dead
+    lda #GS_LOST
+    sta gamestate
+
     rts
 
 .no_border    
@@ -350,6 +361,33 @@ update_game
     bne +
     +INC_16 playerx
 +
+    
+    ;-- check if player is standing next to a computer
+    lda playerx +1
+    clc
+    ror
+    lda playerx
+    ror
+    lsr
+    lsr
+    tax
+    inx
+    
+    lda playery
+    lsr
+    lsr
+    lsr
+    tay
+    
+    jsr get_tile
+    cmp #TL_COMP
+    bne .no_computer
+
+    lda #GS_WON
+    sta gamestate
+    jmp .gs_end
+    
+.no_computer
     ;-- check if player reached end of screen
     lda playerx +1
     beq .gs_end
@@ -357,9 +395,41 @@ update_game
     cmp #<(RIGHT_PLAT_X + PLAT_W) * 8
     bne .gs_end
     
-    ;-- next level
+    ;-- go to next level
     jsr next_level
     rts
+    
+    ;--
+    ;-- LOST: show message, wait for fire, restart
+.gs_lost
+    +STRING_OUTPUT str_lost, 14, 12, LBL
+    
+    lda #%00000000
+    sta SPR_ENAB
+    
+    lda $DC00       ;-- read joystick in port 2
+    and #JOY_FIRE
+    bne .no_fire
+    
+    ;-- restart level
+    jsr init_game
+    
+.no_fire
+    rts
+
+    ;--
+    ;-- WON: show message
+.gs_won
+    +STRING_OUTPUT str_won, 12, 10, LBL
+
+    lda $DC00       ;-- read joystick in port 2
+    and #JOY_FIRE
+    bne .gs_end
+    
+    ;-- restart game    TODO
+    lda #0
+    sta level_number
+    jsr init_game
     
 .gs_end
 
@@ -374,6 +444,7 @@ update_game
     
     lda #%00000001
     sta SPR_PRIO            ;-- during walking phase, sprite shall be behind chars
+    sta SPR_ENAB            ;-- make sure sprite is visible
     
 .update_sprite_pos
     ;-- add sprite border offset to playerx
@@ -432,7 +503,7 @@ init_level
     sta .levaddr +1
     
     ;-- unpack level path
-    jsr unpack_level
+    jsr unpack_path
     
     ;-- set player x pos
     lda #(LEFT_PLAT_X -1) * 8
@@ -459,7 +530,7 @@ init_level
     
 .count  = $27
     
-unpack_level
+unpack_path
     ldy #4                  ;-- offset of path start in level data
     ldx #0
     
@@ -543,6 +614,8 @@ draw_platform
         dey
         sta (.coladdr), y
     }
+    
+    ;-- note: the following code is a bit messy
 
     ;-- draw teleporter
     +SUB_16_8C .scraddr, 40     ;-- teleporter is 1 char row above walls
@@ -552,13 +625,13 @@ draw_platform
     lsr
     lsr
     lsr
-    and #%00000011
+    and #%00000011              ;-- choose correct animation phase tile
     clc
     adc #TL_TELE
 
     cpx #LEFT_PLAT_X        ;-- check whether drawing left or right teleporter
     bne +
-    !for i, 0, PLAT_W -2 { iny }    ;-- move a few chars to the right
+    !for i, 0, PLAT_W -2 { iny }    ;-- move a few chars to the right for left teleporter
 +   sta (.scraddr), y
     lda #LBL
     sta (.coladdr), y
@@ -570,12 +643,26 @@ draw_platform
     
     cpx #LEFT_PLAT_X        ;-- check whether drawing left or right teleporter
     beq +
-    !for i, 0, PLAT_W { iny }       ;-- move a few chars to the right
+    !for i, 0, PLAT_W { iny }       ;-- move a few chars to the right for right teleporter
+    
+    ;-- check if we have to draw a computer instead (last level)
+    lda level_number
+    cmp #NUM_LEVELS -1
+    bne +
+    
+    ;-- draw computer
+    dey
+    lda #TL_COMP
+    sta (.scraddr), y
+    lda #WHT
+    sta (.coladdr), y
+    rts
+    
+    ;-- draw black square
 +   lda #' ' + 128          ;-- inverted space char
     sta (.scraddr), y
     lda #BLK
     sta (.coladdr), y
-    
     rts
     
 
