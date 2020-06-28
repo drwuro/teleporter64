@@ -34,6 +34,9 @@ init_game
     sta SPR_ENAB        ;-- turn off sprites
 
     jsr clear_screen
+    lda #LBL
+    jsr clear_color_ram
+
     jsr init_level
     
     ;-- clear joy list
@@ -169,38 +172,61 @@ update_game
     and #%00011111
     cmp #%00011111          ;-- check for neutral position
     beq .no_joy
-    cmp JOY_LIST, x         ;-- check if state is different than previous one
-    beq .no_joy
     
     ;-- only write if it's a clear direction (no diagonals)
-    cmp #%00011110
-    beq .write_joy
-    cmp #%00011101
-    beq .write_joy
     cmp #%00011011
-    beq .write_joy
+    beq .write_left
     cmp #%00010111
-    beq .write_joy
+    beq .write_right
+    cmp #%00011110
+    beq .write_up
+    cmp #%00011101
+    beq .write_down
     
     jmp .no_joy
     
+    ;-- choose direction value according to joy state
+.write_left
+    lda #DIR_LEFT
+    jmp .write_joy
+.write_right
+    lda #DIR_RIGHT
+    jmp .write_joy
+.write_up
+    lda #DIR_UP
+    jmp .write_joy
+.write_down
+    lda #DIR_DOWN
+    
 .write_joy
-    ;-- add current joystick state to list
+    cmp JOY_LIST, x             ;-- check if state is different than previously
+    beq .no_joy
+
+    ;-- add direction to list
     inx
     sta JOY_LIST, x
     stx joy_index
     
+    ;-- add arrow symbol to screen
+    clc
+    adc #TL_LEFT                ;-- direction + left arrow = arrow tile number
+    sta SCR_BASE + 40 * 24, x
+    
 .no_joy
-
     ;-- player movement
-
-    lda tele_delay          ;-- check if we're still in waiting phase
+    lda tele_delay              ;-- check if we're still in waiting phase
     cmp #TELE_DELAY
     beq .move_player
 
+    ;-- waiting phase
     inc tele_delay
     lda JOY_LIST
-    jmp .curve_left         ;-- set initial direction (a bit hacky)
+    sta playerdir               ;-- set initial player direction
+    
+    lda #WHT
+    sta COL_BASE + 40 * 24, x   ;-- make first arrow white
+    
+    jmp .update_sprite_pos
     
     ;-- move player
 .move_player
@@ -276,37 +302,18 @@ update_game
     rts
     
 .curve
-    ;-- get next value from joy list and apply to player's moving direction
-    inc curve_index
     ldx curve_index
+    
+    ;-- get next value from joy list and apply to player's moving direction
+    inx
     lda JOY_LIST, x
-    
-.curve_left
-    cmp #%00011011
-    bne .curve_right
-    lda #DIR_LEFT
-    jmp .change_dir
-    
-.curve_right
-    cmp #%00010111
-    bne .curve_up
-    lda #DIR_RIGHT
-    jmp .change_dir
-    
-.curve_up
-    cmp #%00011110
-    bne .curve_down
-    lda #DIR_UP
-    jmp .change_dir
-    
-.curve_down
-    cmp #%00011101
-    bne .no_curve
-    lda #DIR_DOWN
-    
-.change_dir
     sta playerdir
-    
+
+    ;-- make arrow white on screen
+    lda #WHT
+    sta COL_BASE + 40*24, x
+    stx curve_index
+
 .no_curve
 
     ;-- check if player leaves the screen

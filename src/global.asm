@@ -55,6 +55,11 @@ PLAT_W              = 5
 TL_WALL             = 64
 TL_TELE             = 65
 TL_COMP             = 74
+TL_LEFT             = 75
+TL_RIGHT            = 76
+TL_UP               = 77
+TL_DOWN             = 78
+TL_GUY              = 79
 
 SP_GUY              = <SPR_BASE / 64
 SP_TELE             = <SPR_BASE / 64 + 4

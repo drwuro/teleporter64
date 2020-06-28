@@ -65,8 +65,8 @@ main
     ;-- copy original c64 charset
     jsr copy_charset
     
-    ;-- copy custom chars (start at char #64, number of chars is 17)
-    +MEMCOPY_HUGE CHARBASE, CHARBASE + 18*8, CHR_BASE + 64*8
+    ;-- copy custom chars (start at char #64, number of chars is 22)
+    +MEMCOPY_HUGE CHARBASE, CHARBASE + 22*8, CHR_BASE + 64*8
     
     ;-- copy music
     +MEMCOPY_HUGE MUSIBASE, END_OF_MUSIC, MUS_BASE
