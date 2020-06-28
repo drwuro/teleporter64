@@ -40,7 +40,7 @@ init_game
     jsr init_level
     
     ;-- clear joy list
-    lda #0
+    lda #$FF
     ldx #0
 .clearloop
     sta JOY_LIST, x
@@ -221,12 +221,14 @@ update_game
     ;-- waiting phase
     inc tele_delay
     lda JOY_LIST
+    cmp #$FF
+    beq +
     sta playerdir               ;-- set initial player direction
     
     lda #WHT
     sta COL_BASE + 40 * 24, x   ;-- make first arrow white
     
-    jmp .update_sprite_pos
++   jmp .update_sprite_pos
     
     ;-- move player
 .move_player
@@ -307,6 +309,8 @@ update_game
     ;-- get next value from joy list and apply to player's moving direction
     inx
     lda JOY_LIST, x
+    cmp #$FF
+    beq .no_curve
     sta playerdir
 
     ;-- make arrow white on screen
