@@ -56,8 +56,10 @@ init_game
     lda #DIR_RIGHT
     sta playerdir
     
-    lda #$FF
-    sta joy_index
+    ldx #$FF
+    stx joy_index
+    
+    sta JOY_LIST, x
     
     ;-- init player sprite
     lda #SP_GUY
@@ -144,9 +146,20 @@ update_game
     and #%00000011
     bne +
     inc playerx
-+
+
+    ;-- set initial joy dir (if joy is pushed while walking)
++   jsr get_joy_dir
+    cmp #DIR_STOP
+    beq +
+    sta JOY_LIST
+    clc
+    adc #TL_LEFT                ;-- direction + left arrow = arrow tile number
+    sta SCR_BASE + 40 * 24
+    ldx #0
+    stx joy_index
+
     ;-- check if player reached teleporter
-    jsr get_tile_at_playerpos
++   jsr get_tile_at_playerpos
     and #%01111111  ;-- check if we're on a space char, but inverted is ok too
     cmp #' '
     beq .not_reached
@@ -166,44 +179,19 @@ update_game
 .gs_play
 
     ;-- handle joystick input
-    ldx joy_index
-    
-    lda $DC00               ;-- read joystick port 2
-    and #%00011111
-    cmp #%00011111          ;-- check for neutral position
+    jsr get_joy_dir
+    cmp #DIR_STOP
     beq .no_joy
     
-    ;-- only write if it's a clear direction (no diagonals)
-    cmp #%00011011
-    beq .write_left
-    cmp #%00010111
-    beq .write_right
-    cmp #%00011110
-    beq .write_up
-    cmp #%00011101
-    beq .write_down
+    ldx joy_index
+    cpx #$FF                    ;-- no direction has been set yet
+    beq +
     
-    jmp .no_joy
-    
-    ;-- choose direction value according to joy state
-.write_left
-    lda #DIR_LEFT
-    jmp .write_joy
-.write_right
-    lda #DIR_RIGHT
-    jmp .write_joy
-.write_up
-    lda #DIR_UP
-    jmp .write_joy
-.write_down
-    lda #DIR_DOWN
-    
-.write_joy
     cmp JOY_LIST, x             ;-- check if state is different than previously
     beq .no_joy
 
-    ;-- add direction to list
-    inx
+    ;-- add direction to list and increment joy index
++   inx
     sta JOY_LIST, x
     stx joy_index
     
