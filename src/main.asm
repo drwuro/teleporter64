@@ -103,6 +103,7 @@ main
     
 .no_irq
     ;-- check for keyboard events
+    jsr $EA87
     jsr $FFE4       ;-- GETIN
     beq .nokey
     sta key

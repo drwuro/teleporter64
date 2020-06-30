@@ -114,3 +114,7 @@ LGN         = $0D
 LBL         = $0E
 GR3         = $0F
 
+;-- special keys
+KEY_RUNSTOP = $03
+
+

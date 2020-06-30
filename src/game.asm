@@ -127,7 +127,17 @@ next_level
 
 update_game
     +DEBUG_BORDER RED
+    
+    ;-- check for run/stop
+    lda key
+    cmp #KEY_RUNSTOP
+    bne +
+    lda #0
+    sta key
+    jsr init_title      ;-- back to title
+    rts
 
++
     ;-- choose pathcolor
     lda #0
     sta pathcolor       ;-- black path is default
