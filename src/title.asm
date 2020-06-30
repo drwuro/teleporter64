@@ -137,6 +137,15 @@ draw_title
     +STRING_OUTPUT .str_credits1, 13, 19, GR2
     +STRING_OUTPUT .str_credits2, 8, 21, GR2
     
+    ldx #0
+-   lda #TL_WALL
+    sta SCR_BASE + 40 * 14 + 17, x
+    lda #BRN
+    sta COL_BASE + 40 * 14 + 17, x
+    inx
+    cpx #5
+    bne -
+    
     rts
     
     
@@ -207,18 +216,19 @@ update_title
 
 
 .ts_title
+    ;-- display teleporter
+    jsr get_teleporter_tile
+    
+    sta SCR_BASE + 40 * 13 + 19
+    lda #LBL
+    sta COL_BASE + 40 * 13 + 19
+    
     jmp .ts_end
 
 
 .ts_instr
     ;-- display teleporter
-    lda tel_anim
-    lsr
-    lsr
-    lsr
-    and #%00000011              ;-- choose correct animation phase tile
-    clc
-    adc #TL_TELE
+    jsr get_teleporter_tile
     
     sta SCR_BASE + 40 * 4 + 31
     lda #LBL
@@ -394,4 +404,14 @@ next_titlestate
     rts
     
     
+get_teleporter_tile    
+    lda tel_anim
+    lsr
+    lsr
+    lsr
+    and #%00000011              ;-- choose correct animation phase tile
+    clc
+    adc #TL_TELE
+    
+    rts
     

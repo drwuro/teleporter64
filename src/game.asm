@@ -676,13 +676,7 @@ draw_platform
     +SUB_16_8C .scraddr, 40     ;-- teleporter is 1 char row above walls
     +SUB_16_8C .coladdr, 40
     
-    lda tel_anim
-    lsr
-    lsr
-    lsr
-    and #%00000011              ;-- choose correct animation phase tile
-    clc
-    adc #TL_TELE
+    jsr get_teleporter_tile
 
     cpx #LEFT_PLAT_X        ;-- check whether drawing left or right teleporter
     bne +
