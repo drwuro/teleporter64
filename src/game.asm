@@ -52,13 +52,12 @@ init_game
     sta gamestate
     sta curve_index
     sta tele_delay
-    
+
+    ;-- always set first direction to "right"    
+    ldx #$0
+    stx joy_index
     lda #DIR_RIGHT
     sta playerdir
-    
-    ldx #$FF
-    stx joy_index
-    
     sta JOY_LIST, x
     
     ;-- init player sprite
@@ -154,9 +153,7 @@ update_game
     sta JOY_LIST
     clc
     adc #TL_LEFT                ;-- direction + left arrow = arrow tile number
-    sta SCR_BASE + 40 * 24
-    ldx #0
-    stx joy_index
+    sta SCR_BASE + 40 * 24      ;-- put arrow on screen
 
     ;-- check if player reached teleporter
 +   jsr get_tile_at_playerpos
@@ -164,7 +161,7 @@ update_game
     cmp #' '
     beq .not_reached
     
-    inc gamestate           ;-- switch to next gamestate (GS_PLAY)
+    inc gamestate               ;-- switch to next gamestate (GS_PLAY)
     
     lda #0
     sta tele_delay
@@ -182,11 +179,7 @@ update_game
     jsr get_joy_dir
     cmp #DIR_STOP
     beq .no_joy
-    
-    ldx joy_index
-    cpx #$FF                    ;-- no direction has been set yet
-    beq +
-    
+
     cmp JOY_LIST, x             ;-- check if state is different than previously
     beq .no_joy
 
@@ -208,11 +201,17 @@ update_game
 
     ;-- waiting phase
     inc tele_delay
-    lda JOY_LIST
-    cmp #$FF
-    beq +
-    sta playerdir               ;-- set initial player direction
+
+    lda tele_delay              ;-- check if waiting phase will be over
+    cmp #TELE_DELAY
+    bne +
     
+    ldx #0
+    lda JOY_LIST                ;-- load and set initial player direction
+    sta playerdir
+    clc
+    adc #TL_LEFT
+    sta SCR_BASE + 40 * 24, x
     lda #WHT
     sta COL_BASE + 40 * 24, x   ;-- make first arrow white
     
@@ -820,31 +819,29 @@ draw_path
 
 
 ;-- return tile (char) at pos x/y
+;--
 
 .tempaddr   = $29
 
 get_tile_at_playerpos
-    
     ;-- divide x by 8
-    lda playerx +1  ;-- high bit needs to be taken along
+    lda playerx +1              ;-- high bit needs to be taken along
     clc
     ror
     lda playerx
     ror
     lsr
     lsr
-    tax             ;-- x is now playerx / 8
+    tax                         ;-- x is now playerx / 8
     
     ;-- divide y by 8
     lda playery
     lsr
     lsr
     lsr
-    tay             ;-- y is now playery / 8
+    tay                         ;-- y is now playery / 8
 
-
-get_tile
-
+get_tile                        ;-- can be called independently
     lda T_SCREENLINES_L, y
     sta .tempaddr
     lda T_SCREENLINES_H, y
