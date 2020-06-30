@@ -175,7 +175,6 @@ update_title
     lsr
     lsr
     and #%00000011
-    sta .temp
     clc
     adc #TL_GUY
     
@@ -184,7 +183,11 @@ update_title
     sta COL_BASE + 40 * 6 + 15
 
     ;-- color cycle for arrows
-;--    inc .temp
+    lda tick
+    lsr
+    lsr
+    and #%00000111
+    sta .temp
     ldx #0
 -   txa
     clc

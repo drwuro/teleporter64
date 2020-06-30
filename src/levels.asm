@@ -42,8 +42,8 @@ LEVEL4
     !byte 20        ;-- y of right platform
     !byte 12, 4     ;-- start x/y of path
 
-    ;-- !text "rrrrrddddddddddddddddddddllluuurrrrrrrrruuuuuuuullluuuurrrrrrrrrrrrrdddddlllddd$"
-    !byte 5, 'r', 20, 'd', 3, 'l', 3, 'u', 9, 'r', 8, 'u', 3, 'l', 4, 'u', 13, 'r', 5, 'd', 3, 'l', 3, 'd', $FF
+    ;-- !text "rrrrrdddddddddddddddddddllluuuuurrrrrrrrruuuuuuuullluuuurrrrrrrrrrrrrddddddlllddddd$"
+    !byte 5, 'r', 19, 'd', 3, 'l', 5, 'u', 9, 'r', 8, 'u', 3, 'l', 4, 'u', 13, 'r', 6, 'd', 3, 'l', 5, 'd', $FF
     
 LEVEL5
     !byte 20        ;-- y of left platform
@@ -66,8 +66,8 @@ LEVEL7
     !byte 20        ;-- y of right platform
     !byte 12, 5    ;-- start x/y of path
 
-    ;-- !text "rrrrrdddddddddddddddddddllluuurrrrrrrrrruuuuuuuuuuullldddrrrrrrruuuuulllllllllllllldddddddrrrrrrrrrrrrrrrrdd$"
-    !byte 5, 'r', 19, 'd', 3, 'l', 3, 'u', 10, 'r', 11, 'u', 3, 'l', 3, 'd', 7, 'r', 5, 'u', 14, 'l', 7, 'd', 16, 'r', 2, 'd', $FF
+    ;-- !text "rrrrrddddddddddddddddddllluuurrrrrrrrrruuuuuuuuuullldddrrrrrrruuuuulllllllllllllldddddddrrrrrrrrrrrrrrrrdd$"
+    !byte 5, 'r', 18, 'd', 3, 'l', 3, 'u', 10, 'r', 10, 'u', 3, 'l', 3, 'd', 7, 'r', 5, 'u', 14, 'l', 7, 'd', 16, 'r', 2, 'd', $FF
     
 LEVEL8
     !byte 20         ;-- y of left platform
@@ -80,7 +80,7 @@ LEVEL8
     !byte 21, 'l', 4, 'u', 14, 'r', 2, 'u', 8, 'r', $FF
     
     
-NUM_LEVELS = 2
+NUM_LEVELS = 8
     
 T_LEVELS
     !word LEVEL1

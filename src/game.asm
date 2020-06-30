@@ -611,11 +611,18 @@ draw_level
     jsr draw_platform
     
     ;-- draw teleportation path
+    lda gamestate
+    cmp #GS_WON         ;-- don't draw path on "won" screen to avoid glitches
+    beq .no_draw
+    cmp #GS_LOST        ;-- don't draw path on "lost" screen to avoid glitches
+    beq .no_draw
+    
     lda pathcolor
     sta .color
     
     jsr draw_path
     
+.no_draw
     rts
     
     
