@@ -15,7 +15,11 @@ str_skills2
     !byte $FF
 
 str_attempts
-    !scr "total number of attempts:"
+    !scr "total number of attempts:   "
+    !byte $FF
+    
+str_attempts99
+    !scr "it took you over 99 attempts..."
     !byte $FF
 
 
@@ -99,6 +103,10 @@ init_game
     sta SPRITE_0C
     
     ;-- increment number of attempts (only relevant in tourist mode)
+    lda num_attempts
+    cmp #$FF
+    beq +
+    
     sed                 ;-- turn on decimal mode
     lda num_attempts
     clc
@@ -106,6 +114,10 @@ init_game
     sta num_attempts
     cld                 ;-- turn off decimal mode again
     
+    bcc +
+    lda #$FF             ;-- we use this little hacky solution if the player
+    sta num_attempts    ;-- needs over 99 attempts (close-to-deadline solution)
++
     rts
 
 
@@ -916,6 +928,10 @@ draw_win_message
     beq +
 
     ;-- tourist mode
+    lda num_attempts
+    cmp #$FF
+    beq .over99
+    
     +STRING_OUTPUT str_attempts, 6, 12, GR2
     
     ;-- display score
@@ -933,6 +949,10 @@ draw_win_message
     adc #48                 ;-- add 48 (= petscii zero) to display second digit
     sta SCR_BASE + 40 * 12 + 33
     
+    rts
+    
+.over99
+    +STRING_OUTPUT str_attempts99, 5, 12, GR2
     rts
     
 +   ;-- challenge mode
