@@ -136,6 +136,39 @@ copy_charset
     
     rts
     
+    
+;-------------------------------
+!zone
+
+get_joy_dir    
+    lda $DC00               ;-- read joystick port 2
+    and #%00011111
+    cmp #%00011111          ;-- check for neutral position
+    beq .no_joy
+    
+    ;-- only write if it's a clear direction (no diagonals)
+    cmp #%00011011
+    bne +
+    lda #DIR_LEFT
+    rts
++   cmp #%00010111
+    bne +
+    lda #DIR_RIGHT
+    rts
++   cmp #%00011110
+    bne +
+    lda #DIR_UP
+    rts
++   cmp #%00011101
+    bne .no_joy
+    lda #DIR_DOWN
+    rts
+    
+.no_joy
+    lda #DIR_STOP
+    rts
+
+    
 ;-------------------------------
 !zone
 
