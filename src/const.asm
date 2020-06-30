@@ -2,7 +2,7 @@
 ;-------------------------------
 ;-- constant values
 
-DEBUG_MODE  = 01
+DEBUG_MODE  = 0
 
 DIR_LEFT    = 0
 DIR_RIGHT   = 1
