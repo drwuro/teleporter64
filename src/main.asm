@@ -44,6 +44,7 @@
     ;-- !src "joystick.asm"
     !src "sound.asm"
     !src "game.asm"
+    !src "title.asm"
     !src "irq.asm"
     !src "levels.asm"
     
@@ -77,7 +78,7 @@ main
     jsr irq_setup
     jsr turn_on_screen
     
-    jsr init_game
+    jsr init_title
 
     ;-- now everything has been initialized, so
     ;-- it's time to step into the main loop

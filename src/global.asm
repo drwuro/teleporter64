@@ -30,6 +30,8 @@ playery             !byte 0
 playerdir           !byte DIR_RIGHT
 playerspeed         !byte 4
 
+game_mode           !byte 0     ;-- 0 = challenge, 1 = tourist
+
 gamestate           !byte 0     ;-- 0 = walk, 1 = play, 2 = next, 3 = lost, 4 = won
 GS_WALK = 0
 GS_PLAY = 1
@@ -37,12 +39,19 @@ GS_NEXT = 2
 GS_LOST = 3
 GS_WON  = 4
 
+titlestate          !byte 0     ;-- title, 1 = instructions, 2 = menu
+TS_TITLE = 0
+TS_INSTR = 1
+TS_MENU  = 2
+
 tele_delay          !byte 0     ;-- delay until teleportation really starts
 TELE_DELAY          = 16
 
 JOY_LIST            = $C000     ;-- the list of joystick input states
 joy_index           !byte $FF
 curve_index         !byte 0
+
+num_attempts        !byte 0
 
 
 STATE_GAME          = 0
@@ -60,6 +69,7 @@ TL_RIGHT            = 76
 TL_UP               = 77
 TL_DOWN             = 78
 TL_GUY              = 79
+TL_SCHWURBEL        = 83
 
 SP_GUY              = <SPR_BASE / 64
 SP_TELE             = <SPR_BASE / 64 + 4

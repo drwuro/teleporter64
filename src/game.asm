@@ -4,7 +4,18 @@ str_lost
     !byte $FF
 
 str_won
-    !scr "congratulations"
+    !scr "congratulations!"
+    !byte $FF
+
+str_skills1
+    !scr "you have great"
+    !byte $FF
+str_skills2
+    !scr "teleportation skills"
+    !byte $FF
+
+str_attempts
+    !scr "total number of attempts:"
     !byte $FF
 
 
@@ -12,13 +23,23 @@ str_won
 !zone
 
 update
+    ;-- counter for teleporter animation (we need this everywhere so we do it here)
+    inc tel_anim
+    lda tel_anim
+    cmp #24
+    bne +
+    lda #0
+    sta tel_anim
++
+
+    ;-- update game or title depending on state
     lda state
     cmp #STATE_GAME
     bne +
     jsr update_game
 +   cmp #STATE_TITLE
     bne +
-    ;--jsr update_title
+    jsr update_title
 +
     rts
     
@@ -28,7 +49,17 @@ update
 !zone
 
 
+reset_game
+    lda #0
+    sta level_number
+    sta num_attempts
+
 init_game
+
+    lda #STATE_GAME
+    sta state
+    
+    ;--
 
     lda #0
     sta SPR_ENAB        ;-- turn off sprites
@@ -67,6 +98,14 @@ init_game
     lda #GRN
     sta SPRITE_0C
     
+    ;-- increment number of attempts (only relevant in tourist mode)
+    sed                 ;-- turn on decimal mode
+    lda num_attempts
+    clc
+    adc #1              ;-- we cannot just use "inc" in decimal mode :'(
+    sta num_attempts
+    cld                 ;-- turn off decimal mode again
+    
     rts
 
 
@@ -104,16 +143,7 @@ update_game
     lda T_PATHCOLOR, x
     sta pathcolor
 .no_color
-    
-    ;-- choose teleporter animation
-    inc tel_anim
-    lda tel_anim
-    cmp #24
-    bne .no_reset
-    lda #0
-    sta tel_anim
-.no_reset
-    
+
     ;-- draw level on screen
     jsr draw_level
     
@@ -411,15 +441,23 @@ update_game
     bne .no_fire
     
     ;-- restart level
-    jsr init_game
+    
+    lda game_mode
+    beq .challenge_mode
+
+    jsr init_game   ;-- restart current level
+    rts
+    
+.challenge_mode
+    jsr init_title  ;-- go back to title
     
 .no_fire
     rts
 
     ;--
-    ;-- WON: show message
+    ;-- WON: show message, wait for fire, restart
 .gs_won
-    +STRING_OUTPUT str_won, 12, 10, LBL
+    jsr draw_win_message
 
     lda $DC00       ;-- read joystick in port 2
     and #JOY_FIRE
@@ -428,7 +466,8 @@ update_game
     ;-- restart game    TODO
     lda #0
     sta level_number
-    jsr init_game
+    jsr init_title
+    rts
     
 .gs_end
 
@@ -856,3 +895,39 @@ get_tile                        ;-- can be called independently
 
 
     
+;-- show win message
+;--
+
+draw_win_message
+    +STRING_OUTPUT str_won, 12, 9, LBL
+    
+    lda game_mode
+    beq +
+
+    ;-- tourist mode
+    +STRING_OUTPUT str_attempts, 6, 12, GR2
+    
+    ;-- display score
+    lda num_attempts        ;-- number is in decimal mode
+    lsr
+    lsr
+    lsr
+    lsr
+    clc
+    adc #48                 ;-- add 48 (= petscii zero) to display first digit
+    sta SCR_BASE + 40 * 12 + 32
+    lda num_attempts
+    and #%00001111
+    clc
+    adc #48                 ;-- add 48 (= petscii zero) to display second digit
+    sta SCR_BASE + 40 * 12 + 33
+    
+    rts
+    
++   ;-- challenge mode
+    +STRING_OUTPUT str_skills1, 13, 12, GR2
+    +STRING_OUTPUT str_skills2, 10, 14, GR2
+    
+    rts
+    
+
