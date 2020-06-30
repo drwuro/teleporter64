@@ -18,6 +18,7 @@ https://csdb.dk/event/?id=2958
  - the basic idea is to "redraw" (i.e. trace) the path, which is shown briefly on the screen, with your joystick
  - you are allowed to do this as fast as you can by wiggling the joystick into the corresponding directions - it's NOT intended to be done in realtime like in a racing game (it's theoretically possible, but you would probably be too slow and fail)
  - you are allowed to start wiggling once the guy has entered the teleporter, but you can set the initial direction already while he's still walking towards it
+ - if you have troubles understanding the gameplay concept, have a look at the arrows in the lower left corner, they show the directions you enter with the joystick (blue arrows) and as soon as they're used at the next corner of the path, they turn white
 
 ### further notes / license
  - you are allowed to use this source code freely to learn/study and also as a basis for your own games or projects
