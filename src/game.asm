@@ -180,6 +180,7 @@ update_game
     cmp #DIR_STOP
     beq .no_joy
 
+    ldx joy_index
     cmp JOY_LIST, x             ;-- check if state is different than previously
     beq .no_joy
 
