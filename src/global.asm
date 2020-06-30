@@ -39,10 +39,11 @@ GS_NEXT = 2
 GS_LOST = 3
 GS_WON  = 4
 
-titlestate          !byte 0     ;-- title, 1 = instructions, 2 = menu
+titlestate          !byte 0     ;-- title, 1 = instructions, 2 = more instructions, 3 = menu
 TS_TITLE = 0
 TS_INSTR = 1
-TS_MENU  = 2
+TS_MORE  = 2
+TS_MENU  = 3
 
 tele_delay          !byte 0     ;-- delay until teleportation really starts
 TELE_DELAY          = 16

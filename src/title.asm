@@ -13,9 +13,10 @@
     !byte $FF
     
 .str_credits2
-    !scr "2020"
+    !scr "craptastic 4k 2020 entry"
     !byte $FF
     
+;--
     
 .str_instr1
     !scr "how to play"
@@ -54,6 +55,41 @@
     !scr "teleportation process has started"
     !byte $FF
     
+;--
+    
+.str_instr11
+    !scr "the vortex path is displayed"
+    !byte $FF
+    
+.str_instr12
+    !scr "briefly while the guy is walking"
+    !byte $FF
+    
+.str_instr13
+    !scr "towards the teleporter"
+    !byte $FF
+
+.str_instr14
+    !scr "it is your job as a responsible"
+    !byte $FF
+    
+.str_instr15
+    !scr "teleporter to memorize it thoroughly,"
+    !byte $FF
+    
+.str_instr16
+    !scr " as you will otherwise kill the"
+    !byte $FF
+    
+.str_instr17
+    !scr "person on his teleportation journey"
+    !byte $FF
+    
+.str_instr18
+    !scr "good luck"
+    !byte $FF
+    
+;--
     
 .str_menu1
     !scr "select game mode"
@@ -95,17 +131,17 @@ init_title
     
 
 draw_title
-    +STRING_OUTPUT .str_title1, 9, 6, LBL
-    +STRING_OUTPUT .str_title2, 15, 8, LBL
+    +STRING_OUTPUT .str_title1, 9, 3, LBL
+    +STRING_OUTPUT .str_title2, 15, 5, LBL
     
-    +STRING_OUTPUT .str_credits1, 13, 16, GR2
-    +STRING_OUTPUT .str_credits2, 18, 18, GR2
+    +STRING_OUTPUT .str_credits1, 13, 19, GR2
+    +STRING_OUTPUT .str_credits2, 8, 21, GR2
     
     rts
     
     
+TEXT_COLOR = GR2
 draw_instructions
-    TEXT_COLOR = GR2
 
     +STRING_OUTPUT .str_instr1, 15, 1, WHT
     +STRING_OUTPUT .str_instr2, 8, 4, TEXT_COLOR
@@ -117,6 +153,21 @@ draw_instructions
     +STRING_OUTPUT .str_instr7, 1, 16, TEXT_COLOR
     +STRING_OUTPUT .str_instr8, 3, 18, TEXT_COLOR
     +STRING_OUTPUT .str_instr9, 3, 20, TEXT_COLOR
+    
+    rts
+    
+    
+draw_more_instructions
+    +STRING_OUTPUT .str_instr11, 5, 1, TEXT_COLOR
+    +STRING_OUTPUT .str_instr12, 4, 3, TEXT_COLOR
+    +STRING_OUTPUT .str_instr13, 9, 5, TEXT_COLOR
+    
+    +STRING_OUTPUT .str_instr14, 4, 13, TEXT_COLOR
+    +STRING_OUTPUT .str_instr15, 2, 15, TEXT_COLOR
+    +STRING_OUTPUT .str_instr16, 4, 17, TEXT_COLOR
+    +STRING_OUTPUT .str_instr17, 2, 19, TEXT_COLOR
+    
+    +STRING_OUTPUT .str_instr18, 15, 23, LBL
     
     rts
     
@@ -145,6 +196,9 @@ update_title
 +   cmp #TS_INSTR
     bne +
     jmp .ts_instr
++   cmp #TS_MORE
+    bne +
+    jmp .ts_more
 +   cmp #TS_MENU
     bne +
     jmp .ts_menu
@@ -204,6 +258,41 @@ update_title
 
     jmp .ts_end
     
+    
+.ts_more
+    ;-- display vortex
+    lda #70
+    sta SCR_BASE + 40 * 9 + 17
+    lda #69
+    sta SCR_BASE + 40 * 9 + 18
+    sta SCR_BASE + 40 * 9 + 19
+    sta SCR_BASE + 40 * 9 + 20
+    lda #73
+    sta SCR_BASE + 40 * 9 + 21
+    
+    lda #68
+    sta SCR_BASE + 40 * 8 + 21
+    sta SCR_BASE + 40 * 10 + 17
+    
+    ;-- cycle vortex colors
+    lda tick
+    lsr
+    lsr
+    and #%00000111
+    tax
+    lda T_PATHCOLOR, x
+
+    sta COL_BASE + 40 * 9 + 17
+    sta COL_BASE + 40 * 9 + 18
+    sta COL_BASE + 40 * 9 + 19
+    sta COL_BASE + 40 * 9 + 20
+    sta COL_BASE + 40 * 9 + 21
+    
+    sta COL_BASE + 40 * 8 + 21
+    sta COL_BASE + 40 * 10 + 17
+
+    jmp .ts_end
+
 
 .ts_menu
     
@@ -276,7 +365,9 @@ next_titlestate
     inc titlestate
     lda titlestate
     cmp #TS_INSTR
-    beq .switch_title
+    beq .switch_instr
+    cmp #TS_MORE
+    beq .switch_more
     cmp #TS_MENU
     beq .switch_menu
     
@@ -286,9 +377,14 @@ next_titlestate
     jsr reset_game
     rts
 
-.switch_title
+.switch_instr
     jsr clear_screen
     jsr draw_instructions
+    rts
+
+.switch_more
+    jsr clear_screen
+    jsr draw_more_instructions
     rts
 
 .switch_menu
