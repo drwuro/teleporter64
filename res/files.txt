@@ -1,0 +1,4 @@
+teleport4.sng       = music (goattracker song file)
+teleport4.bin       = music (exported .bin file, gets included by the game)
+sfx_teleport.ins    = teleportation sound effect (goattracker instrument file)
+sfx_teleport.bin    = teleportation sound effect (exported .bin file, gets included by the game)
