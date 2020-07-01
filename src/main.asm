@@ -41,7 +41,6 @@
     !src "global.asm"
     !src "macros.asm"
     !src "tools.asm"
-    ;-- !src "joystick.asm"
     !src "sound.asm"
     !src "game.asm"
     !src "title.asm"
