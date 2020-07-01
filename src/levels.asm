@@ -32,7 +32,7 @@ LEVEL2
 LEVEL3
     !byte 20        ;-- y of left platform
     !byte 5         ;-- y of right platform
-    !byte 9, 16    ;-- start x/y of path
+    !byte 9, 16     ;-- start x/y of path
 
     ;-- !text "uuuuuuurrrrrrrrrrruuulllldddddddrrrrrrruuuuuuuuurrrrr$"
     !byte 7, 'u', 11, 'r', 3, 'u', 4, 'l', 7, 'd', 7, 'r', 9, 'u', 5, 'r', $FF
@@ -64,14 +64,14 @@ LEVEL6
 LEVEL7
     !byte 6         ;-- y of left platform
     !byte 20        ;-- y of right platform
-    !byte 12, 5    ;-- start x/y of path
+    !byte 12, 5     ;-- start x/y of path
 
     ;-- !text "rrrrrddddddddddddddddddllluuurrrrrrrrrruuuuuuuuuullldddrrrrrrruuuuulllllllllllllldddddddrrrrrrrrrrrrrrrrdd$"
     !byte 5, 'r', 18, 'd', 3, 'l', 3, 'u', 10, 'r', 10, 'u', 3, 'l', 3, 'd', 7, 'r', 5, 'u', 14, 'l', 7, 'd', 16, 'r', 2, 'd', $FF
     
 LEVEL8
-    !byte 20         ;-- y of left platform
-    !byte 5        ;-- y of right platform
+    !byte 20        ;-- y of left platform
+    !byte 5         ;-- y of right platform
     !byte 9, 16     ;-- start x/y of path
 
     ;-- !text "uuuurrrrrruuuuuuuuullldddddrrrrrrdddddddddddddddlllluuurrrrrrrrruuuuurrrrrrrrrdddllllluuuuuuuu"

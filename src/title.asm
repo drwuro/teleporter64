@@ -34,11 +34,11 @@
     !byte $FF
     
 .str_instr3
-    ;--  "1234567812345678123456781234567812345678" ;-- reference for max length
     !scr "when the guy   enters the teleporter,"
     !byte $FF
 
 .str_instr4
+    ;--  "1234567812345678123456781234567812345678" ;-- reference for max length
     !scr "your job is to quickly guide him through"
     !byte $FF
     
