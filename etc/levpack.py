@@ -2,10 +2,10 @@
 levels = ["rrrrrrrrrruuuuuuuuulllluuuuuurrrrrrrrrr$",
           "rrrrrrrrrrdddddlllldddrrrrrrrruuuuurrrrdddddddddd$",
           "uuuuuuurrrrrrrrrrruuulllldddddddrrrrrrruuuuuuuuurrrrr$",
-          "rrrrrddddddddddddddddddddllluuurrrrrrrrruuuuuuuullluuuurrrrrrrrrrrrrdddddlllddd$",
+          "rrrrrdddddddddddddddddddllluuuuurrrrrrrrruuuuuuuullluuuurrrrrrrrrrrrrddddddlllddddd$",
           "uuuuuuuurrrrrrrruuulllddddddrrrrrrrrdddddrrruuuuuuuuuuuuuullldddddrrrrrrrrddddd$",
           "uuuurrrrrrrrrrrrrdddlllluuuuuulllllllddddddddrrrrrrrrrrrrrrruuuuuuuuuuurrrrdd$",
-          "rrrrrdddddddddddddddddddllluuurrrrrrrrrruuuuuuuuuuullldddrrrrrrruuuuulllllllllllllldddddddrrrrrrrrrrrrrrrrdd$",
+          "rrrrrddddddddddddddddddllluuurrrrrrrrrruuuuuuuuuullldddrrrrrrruuuuulllllllllllllldddddddrrrrrrrrrrrrrrrrdd$",
           "uuuurrrrrruuuuuuuuullldddddrrrrrrdddddddddddddddlllluuurrrrrrrrruuuuurrrrrrrrrdddllllluuuuuuuu"
           + "llllllllllllllllllllluuuurrrrrrrrrrrrrruurrrrrrrr$",
           ]
