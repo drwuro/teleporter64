@@ -41,6 +41,7 @@ update
     cmp #STATE_GAME
     bne +
     jsr update_game
+    rts
 +   cmp #STATE_TITLE
     bne +
     jsr update_title
