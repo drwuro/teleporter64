@@ -141,6 +141,8 @@ init_title
     rts
     
 
+;-- draw title screen
+;--
 draw_title
     +STRING_OUTPUT .str_title1, 9, 3, LBL
     +STRING_OUTPUT .str_title2, 15, 5, LBL
@@ -161,6 +163,8 @@ draw_title
     rts
     
     
+;-- draw instructions screen
+;--
 TEXT_COLOR = GR2
 draw_instructions
 
@@ -178,6 +182,8 @@ draw_instructions
     rts
     
     
+;-- draw second instructions screen
+;--
 draw_more_instructions
     +STRING_OUTPUT .str_instr11, 5, 1, TEXT_COLOR
     +STRING_OUTPUT .str_instr12, 4, 3, TEXT_COLOR
@@ -193,6 +199,8 @@ draw_more_instructions
     rts
     
     
+;-- draw menu screen
+;--
 draw_menu
     +STRING_OUTPUT .str_menu1, 12, 6, WHT
     +STRING_OUTPUT .str_menu2, 13, 11, LBL
@@ -206,12 +214,13 @@ draw_menu
     rts
 
 
+;-- the title update function which gets called once per frame
+;--
 update_title
 
     !if DEBUG_MODE { inc $D020 }
     
     ;-- jump to current title state handler
-
     lda titlestate
     cmp #TS_TITLE
     bne +
@@ -394,7 +403,8 @@ update_title
     rts
     
     
-    
+;-- switch to next titlestate
+;--
 next_titlestate
     ;-- increment title state
     inc titlestate
