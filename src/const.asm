@@ -1,6 +1,6 @@
 
 ;-------------------------------
-;-- constant values
+;-- constant values (mostly C64-specific)
 
 DEBUG_MODE  = 0
 

@@ -53,11 +53,15 @@ update
 !zone
 
 
+;-- start game from beginning
+;--
 reset_game
     lda #0
     sta level_number
     sta num_attempts
 
+;-- init and switch to "GAME" state
+;--
 init_game
 
     lda #STATE_GAME
@@ -121,7 +125,8 @@ init_game
     rts
 
 
-
+;-- switch to next level
+;--
 next_level
     inc level_number
     lda level_number
@@ -134,6 +139,8 @@ next_level
     rts
 
 
+;-- the game's update function (called once a frame)
+;--
 
 .tempx  !word 0
 
@@ -587,7 +594,8 @@ init_level
     rts
     
     
-    
+;-- unpack compressed path into memory
+;--
 .count  = $27
     
 unpack_path
@@ -619,7 +627,8 @@ unpack_path
     rts
     
     
-
+;-- draw level on screen
+;--
 draw_level
     ;-- draw platforms and teleporters
     ldx #LEFT_PLAT_X
@@ -648,6 +657,9 @@ draw_level
     rts
     
     
+;-- draw a platform (this code is a bit messy, it detects a few times
+;-- which of the two platforms it has to draw)
+;--
 draw_platform
     tay
     lda T_SCREENLINES_L, y
@@ -727,6 +739,8 @@ draw_platform
     rts
     
 
+;-- draw the teleportation vortex path
+;--
 draw_path
     ldy #3
     lda (.levaddr), y       ;-- path start y position

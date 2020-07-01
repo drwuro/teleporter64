@@ -1,4 +1,11 @@
 
+;-------------------------------
+;-- title and menu screens
+;--
+;-- NOTE: this has been quickly hacked together on the last evening
+;--       so don't expect super-nice code here
+;--
+!zone
 
 .str_title1
     !scr "a day in the life of a"
@@ -27,7 +34,7 @@
     !byte $FF
     
 .str_instr3
-    ;-- !scr "1234567812345678123456781234567812345678"
+    ;--  "1234567812345678123456781234567812345678" ;-- reference for max length
     !scr "when the guy   enters the teleporter,"
     !byte $FF
 
@@ -102,15 +109,19 @@
 .str_menu3
     !scr "tourist mode"
     !byte $FF
+    
+;--
 
 
-.block_fire   = $20
-.block_move   = $21
+.block_fire   = $20     ;-- used to debounce fire button
+.block_move   = $21     ;-- used to debounce joystick movements
 .temp         = $22
 
 .cursorpos    !byte 0
 
 
+;-- init and switch to "TITLE" state
+;--
 init_title
 
     lda #STATE_TITLE
@@ -137,6 +148,7 @@ draw_title
     +STRING_OUTPUT .str_credits1, 13, 19, GR2
     +STRING_OUTPUT .str_credits2, 8, 21, GR2
     
+    ;-- draw small wall segment
     ldx #0
 -   lda #TL_WALL
     sta SCR_BASE + 40 * 14 + 17, x
@@ -197,6 +209,8 @@ draw_menu
 update_title
 
     !if DEBUG_MODE { inc $D020 }
+    
+    ;-- jump to current title state handler
 
     lda titlestate
     cmp #TS_TITLE
@@ -215,6 +229,8 @@ update_title
     jmp .ts_end
 
 
+    ;-- TITLE: display title screen
+    ;--
 .ts_title
     ;-- display teleporter
     jsr get_teleporter_tile
@@ -226,6 +242,8 @@ update_title
     jmp .ts_end
 
 
+    ;-- INSTR: display first instructions screen
+    ;--
 .ts_instr
     ;-- display teleporter
     jsr get_teleporter_tile
@@ -269,6 +287,8 @@ update_title
     jmp .ts_end
     
     
+    ;-- MORE: display second instructions screen
+    ;--
 .ts_more
     ;-- display vortex
     lda #70
@@ -304,6 +324,8 @@ update_title
     jmp .ts_end
 
 
+    ;-- MENU: display menu screen with both game modes as options
+    ;--
 .ts_menu
     
     ;-- delete cursors
@@ -325,6 +347,7 @@ update_title
     ldx #40 * 2                 ;-- move cursor down 2 rows
 +   sta SCR_BASE + 40 * 11 + 11, x
 
+    ;-- check joystick to move cursor
     jsr get_joy_dir
     cmp #DIR_UP
     beq .move_cursor
@@ -341,13 +364,15 @@ update_title
 
     inc .cursorpos
     lda .cursorpos
-    and #%00000001
+    and #%00000001              ;-- cursor pos can only be 0 or 1
     sta .cursorpos
     
     lda #1
     sta .block_move
 
+
 .ts_end
+    ;-- check for fire button
     lda $DC00       ;-- read joystick in port 2
     and #JOY_FIRE
     bne .no_joy
@@ -371,7 +396,7 @@ update_title
     
     
 next_titlestate
-    
+    ;-- increment title state
     inc titlestate
     lda titlestate
     cmp #TS_INSTR
@@ -387,23 +412,29 @@ next_titlestate
     jsr reset_game
     rts
 
+    ;-- switch to instructions screen
 .switch_instr
     jsr clear_screen
     jsr draw_instructions
     rts
 
+    ;-- switch to second instructions screen
 .switch_more
     jsr clear_screen
     jsr draw_more_instructions
     rts
 
+    ;-- switch to menu
 .switch_menu
     jsr clear_screen
     jsr draw_menu
 
     rts
     
-    
+   
+;-- get teleporter tile number with correct animation
+;-- this is used a few times in the title, and also in the game 
+;--
 get_teleporter_tile    
     lda tel_anim
     lsr

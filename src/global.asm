@@ -1,4 +1,6 @@
 
+;-- global variables (and also some constants which are more game-specific)
+
 tick                !byte 0
 
 state               !byte STATE_GAME
@@ -14,12 +16,7 @@ seed                !byte 64    ;-- must not be 0
 
 key                 !byte 0
 
-
-;-------------------------------
-;-- game specific
-
 num_lives           !byte 3
-
 level_number        !byte 0
 
 pathcolor           !byte GR1
@@ -49,19 +46,20 @@ tele_delay          !byte 0     ;-- delay until teleportation really starts
 TELE_DELAY          = 16
 
 JOY_LIST            = $C000     ;-- the list of joystick input states
-joy_index           !byte $FF
-curve_index         !byte 0
+joy_index           !byte $FF   ;-- current write index of JOY_LIST
+curve_index         !byte 0     ;-- current read index of JOY_LIST
 
-num_attempts        !byte 0
+num_attempts        !byte 0     ;-- number of attempts the player took
 
 
 STATE_GAME          = 0
 STATE_TITLE         = 1
 
-LEFT_PLAT_X         = 5
-RIGHT_PLAT_X        = 30
-PLAT_W              = 5
+LEFT_PLAT_X         = 5         ;-- x position of left platform
+RIGHT_PLAT_X        = 30        ;-- x position of right platform
+PLAT_W              = 5         ;-- platform width
 
+;-- tiles
 TL_WALL             = 64
 TL_TELE             = 65
 TL_COMP             = 74
@@ -72,6 +70,7 @@ TL_DOWN             = 78
 TL_GUY              = 79
 TL_SCHWURBEL        = 83
 
+;-- sprites
 SP_GUY              = <SPR_BASE / 64
 SP_TELE             = <SPR_BASE / 64 + 4
 
