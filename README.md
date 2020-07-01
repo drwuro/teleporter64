@@ -1,6 +1,8 @@
 # A Day In The Life Of A Teleporter (C64 version)
 a small teleportation game for the Commodore C64
 
+![teleporter64 screenshot](./etc/4kcompo-files/teleporter64-screenshot.png)
+
 this game was originally developed as a PICO-8 game during a gamejam called Mid-Jam 2020:
 https://drwuro.itch.io/a-day-in-the-life-of-a-teleporter
 
