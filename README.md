@@ -25,7 +25,7 @@ https://csdb.dk/event/?id=2958
  - this source code has been released to the Public Domain
  - you are allowed to use this source code freely to learn/study and also as a basis for your own games or projects
  - if you create something new from it, you're free to do so without any need for attribution of the original source/author (though you're welcome to do so if you wish)
- - if you create a variant of the original game, such as an enhanced version, or a sequel, or a port for a different platform (much appreciated btw), please mention the original game title and the author (the Public Domain license will not force you to do so though, but if you're part of the scene you will know that it's )
+ - if you create a variant of the original game, such as an enhanced version, or a sequel, or a port for a different platform (much appreciated btw), please mention the original game title and the author (the Public Domain license will not force you to do so though, but if you're part of the scene you will know that it's the way to go ;) )
  
  ### disclaimer
   the game has been quickly hacked together within a week, there might be some unused functions or macros from my usual code base. also, there could be lots of parts which could be optimized of course (e.g. the path is drawn every frame, even while it's invisible etc)
